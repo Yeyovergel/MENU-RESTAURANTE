@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Menú del Restaurante</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+    h1 { text-align: center; }
+    label { display: block; margin-top: 10px; }
+    input, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+    button { margin-top: 15px; padding: 10px 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>Menú del Restaurante</h1>
+  <form id="pedidoForm">
+    <input type="hidden" id="mesa" name="mesa">
+    <label>Plato:</label>
+    <input type="text" name="plato" required>
+    
+    <label>Cantidad:</label>
+    <input type="number" name="cantidad" required>
+    
+    <label>Comentarios:</label>
+    <textarea name="comentarios" rows="4"></textarea>
+    
+    <button type="submit">Enviar pedido</button>
+  </form>
+
+  <p id="mensaje"></p>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const mesa = urlParams.get('mesa');
+    document.getElementById("mesa").value = mesa;
+
+    document.getElementById("pedidoForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      formData.append("fecha", new Date().toISOString());
+
+      fetch('https://script.google.com/macros/s/TU-URL-DE-SCRIPT/exec', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("mensaje").innerText = "¡Pedido enviado con éxito!";
+        document.getElementById("pedidoForm").reset();
+      })
+      .catch(err => {
+        document.getElementById("mensaje").innerText = "Hubo un error al enviar el pedido.";
+      });
+    });
+  </script>
+</body>
+</html>
